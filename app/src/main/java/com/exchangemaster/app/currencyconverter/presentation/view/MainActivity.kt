@@ -1,8 +1,10 @@
 package com.exchangemaster.app.currencyconverter.presentation.view
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -37,7 +39,13 @@ class MainActivity : AppCompatActivity() {
                 if(countryValue1.text.toString() != it)
                 {
                     viewModel.countryValue1.value = it
-                    convert.rotation = 0.0F
+                    if(convert.rotation!=0.0F) {
+                        val rotateAnimator = ObjectAnimator.ofFloat(convert, "rotation", 180f, 0f)
+                        rotateAnimator.duration = 1000 // duration in milliseconds
+                        rotateAnimator.start()
+                    }
+                    convert.rotation=0.0F
+
                     convert()
 
                 }
@@ -52,7 +60,12 @@ class MainActivity : AppCompatActivity() {
                 if(countryValue2.text.toString() != it)
                 {
                     viewModel.countryValue2.value = it
-                    convert.rotation = 180.0F
+                    if(convert.rotation!=180.0F) {
+                        val rotateAnimator = ObjectAnimator.ofFloat(convert, "rotation", 0f, 180f)
+                        rotateAnimator.duration = 1000 // duration in milliseconds
+                        rotateAnimator.start()
+                    }
+                    convert.rotation=180.0F
                     convert()
 
                 }

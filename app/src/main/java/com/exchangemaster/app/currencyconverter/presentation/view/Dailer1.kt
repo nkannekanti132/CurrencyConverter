@@ -3,11 +3,13 @@ package com.exchangemaster.app.currencyconverter.presentation.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.exchangemaster.app.currencyconverter.R
 
 
@@ -24,10 +26,9 @@ class Dailer1 : AppCompatActivity() {
     private lateinit var button8: Button
     private lateinit var button9: Button
     private lateinit var button10: Button
-    private lateinit var button11: ImageView
+    private lateinit var button11: Button
     private lateinit var button12: Button
 
-    private lateinit var down:TextView
 
 
     private lateinit var mValue:TextView
@@ -35,6 +36,11 @@ class Dailer1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dailer1)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // Enable the back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         button = findViewById(R.id.button)
         button1 = findViewById(R.id.button1)
@@ -50,7 +56,6 @@ class Dailer1 : AppCompatActivity() {
         button11 = findViewById(R.id.imageView)
         button12 = findViewById(R.id.button12)
         mValue = findViewById(R.id.valueM1)
-        down = findViewById(R.id.down)
 
         onClicker(button)
         onClicker(button1)
@@ -66,11 +71,6 @@ class Dailer1 : AppCompatActivity() {
 
 
 
-
-        if(mValue.text == "0")
-        {
-            mValue.text = ""
-        }
 
         button11.setOnClickListener {
             if(mValue.text.toString().isNotEmpty())
@@ -102,28 +102,6 @@ class Dailer1 : AppCompatActivity() {
 
         }
 
-        down.setOnClickListener {
-            val resultIntent = Intent()
-            if (mValue.text.toString().isEmpty())
-            {
-                resultIntent.putExtra("Dailer1Value", "0")
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
-            }
-            else if (mValue.text.toString().toDoubleOrNull()==null)
-            {
-                Toast.makeText(this,"Please enter a valid number",Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
-                resultIntent.putExtra("Dailer1Value", mValue.text.toString())
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
-
-            }
-
-
-        }
 
 
     }
@@ -136,12 +114,25 @@ class Dailer1 : AppCompatActivity() {
     }
 
     override fun onResume() {
-        if(intent.getStringExtra("Country1Value")!="0")
+        if(intent.getStringExtra("Country1Value")?.toDouble()!=0.0)
         {
             mValue.text = intent.getStringExtra("Country1Value")
         }
+        else
+        {
+            mValue.text = ""
+        }
 
         super.onResume()
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() // Handle back button click
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }
